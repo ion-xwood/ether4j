@@ -21,8 +21,8 @@
 
 ## Dev server
 ```sh
-utils/geth_docker.sh pull
-utils/geth_docker.sh dev
+sudo utils/geth_docker.sh pull
+sudo utils/geth_docker.sh dev
 ```
 
 ## Make
@@ -35,6 +35,6 @@ mvn clean install
 <dependency>
   <groupId>tech.xwood</groupId>
   <artifactId>ether4j</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
