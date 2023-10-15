@@ -4,14 +4,12 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import tech.xwood.ether4j.Utils;
 
 public class AbiInt extends AbiValue {
 
   public static class Type extends AbiType {
 
     private static Map<Integer, AbiInt.Type> INSTANCES = new HashMap<>(Abi.MAX_BIT_LENGTH / 8);
-
     static {
       for (int bitLength = 8; bitLength <= Abi.MAX_BIT_LENGTH; bitLength += 8) {
         INSTANCES.put(bitLength, new Type(bitLength));
@@ -26,20 +24,20 @@ public class AbiInt extends AbiValue {
 
     private Type(final int bitLength) {
       super("int" + bitLength);
-      Utils.require(bitLength % 8 == 0 && bitLength > 0 && bitLength <= Abi.MAX_BIT_LENGTH, "Bitsize must be 8 bit aligned, and in range 0 < bitSize <= 256");
+      AbiUtils.require(bitLength % 8 == 0 && bitLength > 0 && bitLength <= Abi.MAX_BIT_LENGTH, "Bitsize must be 8 bit aligned, and in range 0 < bitSize <= 256");
       this.bitLength = bitLength;
     }
 
     @Override
     public AbiInt decode(final String raw) {
-      return decode(raw, 0);
+      return this.decode(raw, 0);
     }
 
     @Override
     public AbiInt decode(final String raw, final int offset) {
       final String input = raw.substring(offset, offset + Abi.MAX_BYTE_LENGTH_FOR_HEX_STRING);
       final byte[] inputBytes = Abi.hexToBytes(input);
-      final int byteLength = bitLength >> 3;
+      final int byteLength = this.bitLength >> 3;
       final byte[] valueBytes = new byte[byteLength + 1];
       valueBytes[0] = inputBytes[0]; // take MSB as sign bit
       final int valueOffset = Abi.MAX_BYTE_LENGTH - byteLength;
@@ -91,23 +89,23 @@ public class AbiInt extends AbiValue {
 
   private AbiInt(final BigInteger value, final AbiInt.Type type) {
     super(type);
-    Utils.require(value.bitLength() <= type.bitLength, "Wrong bit length");
+    AbiUtils.require(value.bitLength() <= type.bitLength, "Wrong bit length");
     this.value = value;
   }
 
   @Override
   public void encodeTo(final StringBuilder dest) {
-    encodeTo(dest, value);
+    encodeTo(dest, this.value);
   }
 
   @Override
   protected boolean equalsImpl(final AbiValue other) {
-    return Objects.equals(value, ((AbiInt) other).value);
+    return Objects.equals(this.value, ((AbiInt) other).value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(value);
+    return Objects.hash(this.value);
   }
 
 }

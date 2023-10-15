@@ -21,8 +21,8 @@
 
 ## Dev server
 ```sh
-sudo utils/geth_docker.sh pull
-sudo utils/geth_docker.sh dev
+sudo ./tools.sh pull
+sudo ./tools.sh dev
 ```
 
 ## Make
@@ -38,3 +38,8 @@ mvn clean install
   <version>1.0.1</version>
 </dependency>
 ```
+
+## Links
+* https://github.com/ethereum/solidity/releases
+* https://etclabscore.github.io/core-geth/JSON-RPC-API/modules/miner/
+

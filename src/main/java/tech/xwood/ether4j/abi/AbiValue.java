@@ -31,4 +31,5 @@ public abstract class AbiValue {
 
   @Override
   public abstract int hashCode();
+
 }

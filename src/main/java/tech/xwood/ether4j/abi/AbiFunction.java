@@ -3,8 +3,8 @@ package tech.xwood.ether4j.abi;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import tech.xwood.ether4j.Crypto;
-import tech.xwood.ether4j.Quantity;
+import tech.xwood.ether4j.domain.Crypto;
+import tech.xwood.ether4j.domain.Quantity;
 
 public class AbiFunction {
 
@@ -21,19 +21,15 @@ public class AbiFunction {
   }
 
   public static AbiValue[] decodeResult(final String raw, AbiType... resultTypes) {
-
     if (raw.isEmpty()) {
       return new AbiValue[0];
     }
     resultTypes = (resultTypes == null) ? new AbiType[0] : resultTypes;
     final AbiValue[] outValues = new AbiValue[resultTypes.length];
-
     int offset = 0;
     for (int i = 0; i < resultTypes.length; i++) {
-
       final AbiType type = resultTypes[i];
       final int dataOffset = getDataOffset(raw, offset, type);
-
       if (type instanceof AbiArrayDynamic.Type) {
         outValues[i] = type.decode(raw, dataOffset);
         offset += Abi.MAX_BYTE_LENGTH_FOR_HEX_STRING;
@@ -52,7 +48,6 @@ public class AbiFunction {
   }
 
   static void encodeArgs(final StringBuilder dest, final AbiValue[] args) {
-
     int dynamicDataOffset = argLength(args) * Abi.MAX_BYTE_LENGTH;
     final StringBuilder dynamicData = new StringBuilder();
     for (final AbiValue arg : args) {
@@ -81,13 +76,10 @@ public class AbiFunction {
   }
 
   public static void encodeCallTo(final StringBuilder dest, final String name, AbiValue... args) {
-
     args = args == null ? new AbiValue[0] : args;
-
     final AbiType[] argTypes = Arrays.stream(args)
       .map(v -> v.type)
       .toArray(size -> new AbiType[size]);
-
     dest.append(getId(name, argTypes));
     encodeArgs(dest, args);
   }
@@ -103,7 +95,6 @@ public class AbiFunction {
   }
 
   private static int getDataOffset(final String raw, final int offset, final AbiType type) {
-
     if (type instanceof AbiBytesDynamic.Type || type instanceof AbiString.Type || type instanceof AbiArrayDynamic.Type) {
       return AbiUint.Type.decode(raw, offset, 256).intValue() << 1;
     }
@@ -127,4 +118,5 @@ public class AbiFunction {
     result.append(")");
     return result.toString();
   }
+
 }

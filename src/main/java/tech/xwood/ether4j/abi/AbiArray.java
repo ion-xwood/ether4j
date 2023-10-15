@@ -1,14 +1,12 @@
 package tech.xwood.ether4j.abi;
 
 import java.util.Arrays;
-import tech.xwood.ether4j.Utils;
 
 public class AbiArray extends AbiValue {
 
   public static class Type extends AbiType {
 
     static int getValueLength(final String input, final int offset, final AbiType valueType) {
-
       if (input.length() == offset) {
         return 0;
       }
@@ -25,29 +23,29 @@ public class AbiArray extends AbiValue {
     }
 
     public final AbiType valueType;
+
     public final int length;
 
     private Type(final AbiType valueType, final int length) {
       super(String.format("%s[%s]", valueType.name, length));
-      Utils.require(length > 0, "Array can't be empty");
+      AbiUtils.require(length > 0, "Array can't be empty");
       this.length = length;
       this.valueType = valueType;
     }
 
     @Override
     public AbiArray decode(final String raw) {
-      return decode(raw, 0);
+      return this.decode(raw, 0);
     }
 
     @Override
     public AbiArray decode(final String raw, final int offset) {
-
-      Utils.require(length > 0, "Zero length fixed array is invalid type");
-      final AbiValue[] values = new AbiValue[length];
+      AbiUtils.require(this.length > 0, "Zero length fixed array is invalid type");
+      final AbiValue[] values = new AbiValue[this.length];
       int currOffset = offset;
-      for (int i = 0; i < length; i++) {
-        values[i] = valueType.decode(raw, currOffset);
-        currOffset += getValueLength(raw, currOffset, valueType) * Abi.MAX_BYTE_LENGTH_FOR_HEX_STRING;
+      for (int i = 0; i < this.length; i++) {
+        values[i] = this.valueType.decode(raw, currOffset);
+        currOffset += getValueLength(raw, currOffset, this.valueType) * Abi.MAX_BYTE_LENGTH_FOR_HEX_STRING;
       }
       return new AbiArray(values, this);
     }
@@ -66,25 +64,25 @@ public class AbiArray extends AbiValue {
 
   private AbiArray(final AbiValue[] values, final AbiArray.Type type) {
     super(type);
-    Utils.require(values.length == type.length, "Data length and type are not equals");
+    AbiUtils.require(values.length == type.length, "Data length and type are not equals");
     this.values = values;
   }
 
   @Override
   public void encodeTo(final StringBuilder dest) {
-    for (final AbiValue value : values) {
+    for (final AbiValue value : this.values) {
       value.encodeTo(dest);
     }
   }
 
   @Override
   protected boolean equalsImpl(final AbiValue other) {
-    return Arrays.equals(values, ((AbiArray) other).values);
+    return Arrays.equals(this.values, ((AbiArray) other).values);
   }
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(values);
+    return Arrays.hashCode(this.values);
   }
 
 }

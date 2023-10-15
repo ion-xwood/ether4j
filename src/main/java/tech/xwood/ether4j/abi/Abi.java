@@ -3,17 +3,18 @@ package tech.xwood.ether4j.abi;
 public class Abi {
 
   static final int MAX_BIT_LENGTH = 256;
+
   static final int MAX_BYTE_LENGTH = MAX_BIT_LENGTH / 8;
+
   static final int MAX_BYTE_LENGTH_FOR_HEX_STRING = MAX_BYTE_LENGTH << 1;
 
   static void hexTo(final StringBuilder dest, final byte[] input) {
-    for (final byte element : input) {
+    for (final var element : input) {
       dest.append(String.format("%02x", element & 0xFF));
     }
   }
 
   static byte[] hexToBytes(final String hex) {
-
     final int len = hex.length();
     if (len == 0) {
       return new byte[] {};
@@ -36,8 +37,9 @@ public class Abi {
   }
 
   static String toHex(final byte[] input) {
-    final StringBuilder dest = new StringBuilder();
+    final var dest = new StringBuilder();
     hexTo(dest, input);
     return dest.toString();
   }
+
 }

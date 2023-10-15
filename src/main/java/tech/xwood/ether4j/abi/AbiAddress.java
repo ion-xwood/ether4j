@@ -2,7 +2,7 @@ package tech.xwood.ether4j.abi;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import tech.xwood.ether4j.Quantity;
+import tech.xwood.ether4j.domain.Quantity;
 
 public class AbiAddress extends AbiValue {
 
@@ -20,7 +20,7 @@ public class AbiAddress extends AbiValue {
 
     @Override
     public AbiAddress decode(final String raw) {
-      return decode(raw, 0);
+      return this.decode(raw, 0);
     }
 
     @Override
@@ -67,26 +67,26 @@ public class AbiAddress extends AbiValue {
 
   @Override
   public void encodeTo(final StringBuilder dest) {
-    AbiUint.encodeTo(dest, value);
+    AbiUint.encodeTo(dest, this.value);
   }
 
   @Override
   protected boolean equalsImpl(final AbiValue other) {
-    return Objects.equals(value, ((AbiAddress) other).value);
+    return Objects.equals(this.value, ((AbiAddress) other).value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(value);
+    return Objects.hash(this.value);
   }
 
   public Quantity toQuantity() {
-    return Quantity.of(value);
+    return Quantity.of(this.value);
   }
 
   @Override
   public String toString() {
-    return "0x" + value.toString(16);
+    return "0x" + this.value.toString(16);
   }
 
 }

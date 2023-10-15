@@ -10,13 +10,11 @@ public class AbiBytesDynamic extends AbiValue {
     private static final AbiBytesDynamic.Type INSTANCE = new Type();
 
     static byte[] decodeBytes(final String raw, final int offset) {
-
       final int encodedLength = AbiUint.Type.decode(raw, offset, 256).intValue();
       final int hexStringEncodedLength = encodedLength << 1;
       final int valueOffset = offset + Abi.MAX_BYTE_LENGTH_FOR_HEX_STRING;
       final String data = raw.substring(valueOffset, valueOffset + hexStringEncodedLength);
       return Abi.hexToBytes(data);
-
     }
 
     public static AbiBytesDynamic.Type get() {

@@ -2,9 +2,9 @@ package tech.xwood.ether4j.abi;
 
 import java.util.ArrayList;
 import java.util.List;
-import tech.xwood.ether4j.Crypto;
-import tech.xwood.ether4j.Error;
-import tech.xwood.ether4j.Quantity;
+import tech.xwood.ether4j.domain.Crypto;
+import tech.xwood.ether4j.domain.Error;
+import tech.xwood.ether4j.domain.Quantity;
 
 public class AbiEvent {
 
@@ -13,12 +13,14 @@ public class AbiEvent {
     public static class Item {
 
       public final AbiType type;
+
       public final boolean indexed;
 
       public Item(final AbiType type, final boolean indexed) {
         this.type = type;
         this.indexed = indexed;
       }
+
     }
 
     public static Types create() {
@@ -60,20 +62,16 @@ public class AbiEvent {
   }
 
   public static AbiValue[] decode(final Quantity data, final Quantity[] topics, final String eventName, final Types types) {
-
     final Quantity signature = AbiEvent.getSignatureAsQuantity(eventName, types.getTypes());
     if (!signature.equals(topics[0])) {
       throw new Error("Event signature is wrong");
     }
     final AbiValue[] notIndexedValues = AbiEvent.decodeNotIndexedValues(data, types.getNotIndexedTypes());
-
     final int size = types.items.size();
     final AbiValue[] result = new AbiValue[size];
-
     int resultIndex = 0;
     int topicsIndex = 1;
     int notIndexedValuesIndex = 0;
-
     for (final Types.Item item : types.items) {
       if (item.indexed) {
         result[resultIndex++] = decodeIndexedValue(topics[topicsIndex++], item.type);
@@ -126,4 +124,5 @@ public class AbiEvent {
   public static Quantity getSignatureAsQuantity(final String name, final AbiType... argTypes) {
     return Quantity.ofHexWithoutPrefix(getSignature(name, argTypes));
   }
+
 }

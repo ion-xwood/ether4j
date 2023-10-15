@@ -31,6 +31,7 @@ public class AbiString extends AbiValue {
     public AbiString valueOf(final String value) {
       return new AbiString(value);
     }
+
   }
 
   public static AbiString of(final String value) {
@@ -63,4 +64,5 @@ public class AbiString extends AbiValue {
   public String toString() {
     return value;
   }
+
 }

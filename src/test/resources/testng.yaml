@@ -1,0 +1,5 @@
+parallel: None
+tests:
+ - name: tech.xwood.ether4j
+   preserveOrder: true
+   packages: ["tech.xwood.ether4j.*"]

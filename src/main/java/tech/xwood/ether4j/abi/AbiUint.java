@@ -4,14 +4,12 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import tech.xwood.ether4j.Utils;
 
 public class AbiUint extends AbiValue {
 
   public static class Type extends AbiType {
 
     private static Map<Integer, AbiUint.Type> INSTANCES = new HashMap<>(Abi.MAX_BIT_LENGTH / 8);
-
     static {
       for (int bitLength = 8; bitLength <= Abi.MAX_BIT_LENGTH; bitLength += 8) {
         INSTANCES.put(bitLength, new Type(bitLength));
@@ -36,18 +34,18 @@ public class AbiUint extends AbiValue {
 
     private Type(final int bitLength) {
       super("uint" + bitLength);
-      Utils.require(bitLength % 8 == 0 && bitLength > 0 && bitLength <= Abi.MAX_BIT_LENGTH, "Bitsize must be 8 bit aligned, and in range 0 < bitSize <= 256");
+      AbiUtils.require(bitLength % 8 == 0 && bitLength > 0 && bitLength <= Abi.MAX_BIT_LENGTH, "Bitsize must be 8 bit aligned, and in range 0 < bitSize <= 256");
       this.bitLength = bitLength;
     }
 
     @Override
     public AbiUint decode(final String raw) {
-      return decode(raw, 0);
+      return this.decode(raw, 0);
     }
 
     @Override
     public AbiUint decode(final String raw, final int offset) {
-      return new AbiUint(decode(raw, offset, bitLength), this);
+      return new AbiUint(decode(raw, offset, this.bitLength), this);
     }
 
     public AbiUint valueOf(final BigInteger value) {
@@ -71,7 +69,6 @@ public class AbiUint extends AbiValue {
   }
 
   static void encodeTo(final StringBuilder dest, final BigInteger value) {
-
     final byte[] rawValue;
     {
       if (value.bitLength() == Abi.MAX_BIT_LENGTH) {
@@ -110,28 +107,29 @@ public class AbiUint extends AbiValue {
 
   private AbiUint(final BigInteger value, final AbiUint.Type type) {
     super(type);
-    Utils.require(value.bitLength() <= type.bitLength, "Wrong bit length");
-    Utils.require(value.signum() != -1, "Value must be unsigned");
+    AbiUtils.require(value.bitLength() <= type.bitLength, "Wrong bit length");
+    AbiUtils.require(value.signum() != -1, "Value must be unsigned");
     this.value = value;
   }
 
   @Override
   public void encodeTo(final StringBuilder dest) {
-    encodeTo(dest, value);
+    encodeTo(dest, this.value);
   }
 
   @Override
   protected boolean equalsImpl(final AbiValue other) {
-    return Objects.equals(value, ((AbiUint) other).value);
+    return Objects.equals(this.value, ((AbiUint) other).value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(value);
+    return Objects.hash(this.value);
   }
 
   @Override
   public String toString() {
-    return value.toString();
+    return this.value.toString();
   }
+
 }

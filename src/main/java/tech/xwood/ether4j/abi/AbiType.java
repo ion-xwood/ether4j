@@ -22,11 +22,12 @@ public abstract class AbiType {
     if (obj == null || !(obj instanceof AbiType)) {
       return false;
     }
-    return Objects.equals(name, ((AbiType) obj).name);
+    return Objects.equals(this.name, ((AbiType) obj).name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name);
+    return Objects.hash(this.name);
   }
+
 }

@@ -1,0 +1,28 @@
+---
+version: "2.4"
+
+services:
+
+  geth:
+    image: ethereum/client-go:release-1.13
+    restart: always
+    user: root
+    networks: [ "geth" ]
+    ports:
+     - 8545:8545
+     - 8546:8546
+    environment:
+      MALLOC_ARENA_MAX: 1
+      ARANGO_ROOT_PASSWORD: arangodb
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "geth --dev --verbosity=4 --http --http.addr=0.0.0.0 --http.port=8545 --http.corsdomain=* --http.api=admin,debug,miner,shh,txpool,personal,eth,net,web3,db --ws --ws.addr=0.0.0.0 --ws.port=8546 --ws.origins=* --ws.api=admin,debug,miner,shh,txpool,personal,eth,net,web3,db --ipcdisable"
+
+
+
+
+networks:
+  geth:
+
+ 
